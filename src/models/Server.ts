@@ -1,6 +1,7 @@
 import * as express from 'express';
 import cors from 'cors';
 import config from '../config/index';
+import router from '../routes';
 
 class Server{
     app = express.default();
@@ -17,7 +18,7 @@ class Server{
     }
 
     routes(){
-
+        this.app.use('/api', router)
     }
 
     async database(){

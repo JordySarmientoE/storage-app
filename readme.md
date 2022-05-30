@@ -9,3 +9,6 @@ Here's the steps to run project
 
 4. Run project
 -> npm run dev
+
+5. Correr las migraciones en la base de datos a utilizar
+-> npx prisma migrate deploy
