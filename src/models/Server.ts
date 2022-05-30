@@ -7,7 +7,6 @@ class Server{
     app = express.default();
 
     constructor(){
-        this.database();
         this.middlewares();
         this.routes();
     }
@@ -19,10 +18,6 @@ class Server{
 
     routes(){
         this.app.use('/api', router)
-    }
-
-    async database(){
-
     }
 
     listen(){

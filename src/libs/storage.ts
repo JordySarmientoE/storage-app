@@ -8,20 +8,47 @@ const storage = new Storage({
     keyFilename: "credentials.json"
 })
 
-const uploadFiles = (files: any[]) => {
-    files.forEach(file => {
-        const ext = path.extname(file.originalname);
-        const fileName = v4() + ext;
-        const cloudFile = storage.bucket(config.BUCKET_NAME || '').file(fileName);
-        const fileStream = Readable.from(file.buffer);
+const uploadFile = (file: any) => {
+
+    if (!file) {
+        return {
+            success: false,
+            message: 'At least one file is required'
+        }
+    }
+
+    const ext = path.extname(file.originalname);
+    const fileName = v4() + ext;
+    const cloudFile = storage.bucket(config.BUCKET_NAME || '').file(fileName);
+    const fileStream = Readable.from(file.buffer);
+
+    return new Promise((resolve, reject) => {
         fileStream.pipe(cloudFile.createWriteStream())
             .on("finish", () => {
-                console.log("Upload finish...")
+                resolve({
+                    success: true,
+                    message: 'File uploaded successfully',
+                    originalName: file.originalname,
+                    fileName
+                })
             })
             .on("error", (err) => {
                 console.log(err)
+                reject({
+                    success: false,
+                    message: 'An error ocurred'
+                });
             })
     })
 }
 
-export default uploadFiles
+const uploadFiles = async (files: any[] = []) => {
+    const promises = files.map(file => uploadFile(file))
+    const results = await Promise.allSettled(promises)
+    return results;
+}
+
+export default {
+    uploadFile,
+    uploadFiles
+}

@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "SubscriptionType" AS ENUM ('FREE', 'PREMIUM', 'ENTREPRISE');
+
 -- CreateTable
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
@@ -25,6 +28,7 @@ CREATE TABLE "Folder" (
 CREATE TABLE "File" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "originalName" TEXT NOT NULL,
     "ownerId" INTEGER NOT NULL,
     "folderId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -35,7 +39,7 @@ CREATE TABLE "File" (
 -- CreateTable
 CREATE TABLE "Subscription" (
     "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
+    "type" "SubscriptionType" NOT NULL DEFAULT E'FREE',
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
