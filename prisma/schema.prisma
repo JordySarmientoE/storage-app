@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(100)
+  email String @unique
+  password String
+  active Boolean
+  folders Folder[]
+  files File[]
+  subscription Subscription?
+  createdAt DateTime @default(now())
+}
+
+model Folder{
+  id Int @id @default(autoincrement())
+  name String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  parentFolder Folder? @relation("FolderSubFolder", fields: [parentFolderId], references: [id])
+  parentFolderId Int?
+  childFolders Folder[] @relation("FolderSubFolder")
+  files File[]
+  createdAt DateTime @default(now())
+}
+
+model File{
+  id Int @id @default(autoincrement())
+  name String
+  owner User @relation(fields: [ownerId], references: [id])
+  ownerId Int
+  folder Folder? @relation(fields: [folderId], references: [id])
+  folderId Int?
+  createdAt DateTime @default(now())
+}
+
+model Subscription{
+  id Int @id @default(autoincrement())
+  type SubscriptionType @default(FREE)
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  createdAt DateTime @default(now())
+}
+
+enum SubscriptionType{
+  FREE
+  PREMIUM
+  ENTREPRISE
+}
+
+
