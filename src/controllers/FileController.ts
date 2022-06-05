@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import upload from '../libs/storage';
-import { PrismaClient } from '@prisma/client';
-
-const client = new PrismaClient();
+import client from "../libs/database";
 
 class FileController {
     async uploadFile(req: Request, res: Response) {
@@ -15,8 +13,8 @@ class FileController {
         }
         const results = await upload.uploadFiles(files);
         await Promise.allSettled(results.map(async (file: any) => {
-            if(file.value.success){
-                const result = await client.file.create({
+            if (file.value.success) {
+                await client.file.create({
                     data: {
                         name: file.value.fileName,
                         originalName: file.value.originalName,
@@ -32,4 +30,4 @@ class FileController {
     }
 }
 
-export default FileController
+export default new FileController()

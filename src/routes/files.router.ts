@@ -1,10 +1,9 @@
 import { Router } from 'express';
-import upload from '../middlewares/uploadFile';
-import FileController from '../controllers/files.controller';
+import upload from '../middlewares/uploadFile.middleware';
+import FileController from '../controllers/FileController';
 
 const router = Router();
-const controller = new FileController();
 
-router.post('/upload', upload.array('files'), controller.uploadFile)
+router.post('/upload', upload.array('files'), FileController.uploadFile)
 
 export default router;
